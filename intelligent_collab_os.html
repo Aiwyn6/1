@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能协同操作系统:赋能数字时代的高效运营</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* 动态背景 */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') center/50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* 浮动粒子效果 */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav.scrolled .logo {
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        nav.scrolled .nav-links a {
+            color: #333;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 主内容区 */
+        .hero-content {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 2rem;
+            z-index: 10;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: slideUp 1s ease forwards 0.5s;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideUp 1s ease forwards 0.7s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 按钮样式 */
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: slideUp 1s ease forwards 0.9s;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 特性展示区 */
+        .features {
+            padding: 5rem 5%;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* 统计数据区 */
+        .stats {
+            padding: 4rem 5%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            counter-reset: num var(--num);
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            header {
+                padding: 20px 10px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .features {
+                padding: 3rem 5%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* 新增样式 */
+        header {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e9f7fe;
+        }
+
+        /* 表格内段落样式 */
+        td p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        td p:first-child {
+            margin-top: 0;
+        }
+
+        td p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* 更新h1和h2样式 */
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: slideUp 1s ease forwards 0.5s;
+            color: white; /* 保持hero区域的白色 */
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        /* 覆盖section-title样式以应用新的h2样式 */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #34495e;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">智能协同OS</a>
+            <ul class="nav-links">
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#about">关于我们</a></li>
+                <li><a href="#contact">联系我们</a></li>
+                <li><a href="#demo">在线演示</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主页面 -->
+    <section class="hero">
+        <div class="particles" id="particles"></div>
+        
+        <div class="hero-content">
+            <h1>智能协同操作系统</h1>
+            <p>赋能数字时代的高效运营，让团队协作更智能、更流畅、更高效</p>
+            
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-primary">立即体验</a>
+                <a href="#features" class="btn btn-secondary">了解更多</a>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>向下滚动</span><br>
+            <span>↓</span>
+        </div>
+    </section>
+
+    <!-- 功能特性区 -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="section-title">核心功能特性</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI智能助手</h3>
+                    <p>集成先进的人工智能技术，提供智能任务分配、进度预测和决策支持，让团队协作更加智能化。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>实时协同</h3>
+                    <p>支持多人实时协作，文档同步编辑，即时通讯，让团队成员无论身在何处都能高效协作。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>数据分析</h3>
+                    <p>强大的数据分析和可视化功能，帮助团队洞察工作模式，优化流程，提升整体效率。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>安全保障</h3>
+                    <p>企业级安全标准，端到端加密，多重身份验证，确保您的数据和隐私安全无忧。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>高性能</h3>
+                    <p>基于云原生架构，支持弹性扩展，确保系统在高并发场景下依然保持卓越性能。</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>个性化定制</h3>
+                    <p>灵活的配置选项和插件系统，支持根据团队需求进行个性化定制和功能扩展。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 统计数据区 -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>10000+</h3>
+                <p>活跃企业用户</p>
+            </div>
+            <div class="stat-item">
+                <h3>99.9%</h3>
+                <p>系统稳定性</p>
+            </div>
+            <div class="stat-item">
+                <h3>50%</h3>
+                <p>效率提升</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>技术支持</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 详细信息区 -->
+    <header>
+        <h1>智能协同操作系统:赋能数字时代的高效运营</h1>
+    </header>
+    
+    <main>
+        <section class="section">
+            <h2>1. 前言:迈向智能共生新纪元</h2>
+            <p>在数字政府和数字企业的发展浪潮中，我们正迎来一个高度智能化、协同化和自主化的新阶段。结合大模型(LLMs)、智能体(Agent)和人工智能(AI)等前沿技术，我们的愿景是构建一个以人为中心、数据驱动、AI驱动的智能运行体系，旨在实现泛在协同、精准服务和智慧决策，最终推动社会和经济的全面升级。</p>
+            
+            <h3>● SynergyOS</h3>
+            <p>取义"协同增效"，强调人机协作带来的巨大效益；"OS"则凸显其作为企业/政府运营核心系统的地位，寓意科技感与集成性。</p>
+            
+            <h3>● NexusAI</h3>
+            <p>意为"连接点"、"核心"，强调平台作为组织人机智能的汇聚与连接中枢；"AI"直观表明人工智能属性，寓意AI是连接组织智慧与效率的核心枢纽。</p>
+        </section>
+        
+        <section class="section">
+            <h2>2. 下一代数字政府/企业的蓝图亮点</h2>
+            <p>未来的数字组织将不再仅仅停留在信息化和数字化阶段，而是迈向"超自动化"、"超个性化"和"超智慧化"的新纪元，最终实现人机协同的智能共生。</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>蓝图亮点</th>
+                        <th>核心内涵</th>
+                        <th>应用场景示例(普适性描述)</th>
+                        <th>核心技术</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>超级智能体 (Super-Agent)驱动的 "无摩擦"服务体验</td>
+                        <td>基于大模型的Agent具备更强的理解、推理、规划和执行能力,可主动、预测性地为员工或市民提供服务,实现从"人找服务"到"服务找人"的转变。</td>
+                        <td>
+                            <p><strong>政府场景:</strong> AI Agent根据公民身份和需求,主动推送相关服务、告知办理流程,甚至自动完成部分市批。</p>
+                            <p><strong>企业场景:</strong> 员工的AI Agent智能分析日程、任务和数据;主动提醒优先级,自动生成报告草稿,处理口常事务。</p>
+                        </td>
+                        <td>多模态大模型、RAG(检索增强生成)、强化学习。</td>
+                    </tr>
+                    <tr>
+                        <td>数据要素深度融合与实时智能洞察</td>
+                        <td>大模型作为强大的数据处理和分析引擎,打破数据彻岛,实现跨部门、跨业务的数据融合,生成深层次的业务洞察和预测。</td>
+                        <td>
+                            <p><strong>政府场景:</strong> 城市管理Agent实时分析多源数据,预测潜在风险,自动调度资源。</p>
+                            <p><strong>企业场景:</strong> 销售Agent实时分析市场趋势、客户行为,预测销售额,自动调整营销策略。</p>
+                        </td>
+                        <td>大模型(文本、图像、视频理解)、向量数据库、知识图谱、实时数据流处理</td>
+                    </tr>
+                    <tr>
+                        <td>自主决策与自适应优化系统</td>
+                        <td>AI Agent不再仅仅是辅助具,而是能够根据预设目标和实时环境变化,进行一定程度的自主决策和自我优化;提升系统韧性与适应性。</td>
+                        <td>
+                            <p><strong>政府场景:</strong> 应急管理Agent根据灾情数据自动评估、预测,并自主生成救援方案。</p>
+                            <p><strong>企业场景:</strong> 供应链管理Agent实时感知波动,自主调整库存策略、供应商选择。</p>
+                        </td>
+                        <td>多Agent协作框架、决策大模型、强化学习、复杂系统仿真。</td>
+                    </tr>
+                    <tr>
+                        <td>人机共创与智能知识沉淀</td>
+                        <td>AI成为人类创造力的放大器:通过智能生成、推荐和协作激发新创意。系统能自动沉淀和学习人类经验,形或可持续迭代的组织知识库。</td>
+                        <td>
+                            <p><strong>政府场景:</strong> 政策制定AI Agent辅助专家分析数据:生成多维度政策单案。</p>
+                            <p><strong>企业场景:</strong> 研发设计Agent根据需求自动生成多种设计方案,企业知识管理系统自动索引、提炼和组织知识。</p>
+                        </td>
+                        <td>AIGC(AI生成内容)、只身智能、知识图谱构建与推理。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <div class="section">
+        <header>
+            <h1>系统详细信息</h1>
+            <p>了解智能协同操作系统的核心技术和架构</p>
+        </header>
+        
+        <h2>技术规格</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>组件</th>
+                    <th>技术栈</th>
+                    <th>性能指标</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>前端框架</td>
+                    <td>React 18 + TypeScript</td>
+                    <td>首屏加载 &lt; 2s</td>
+                    <td>响应式设计，PWA支持</td>
+                </tr>
+                <tr>
+                    <td>后端服务</td>
+                    <td>Node.js + Express</td>
+                    <td>并发处理 10k+</td>
+                    <td>微服务架构</td>
+                </tr>
+                <tr>
+                    <td>数据库</td>
+                    <td>MongoDB + Redis</td>
+                    <td>查询响应 &lt; 100ms</td>
+                    <td>分布式部署</td>
+                </tr>
+                <tr>
+                    <td>AI引擎</td>
+                    <td>TensorFlow + PyTorch</td>
+                    <td>推理速度 &lt; 50ms</td>
+                    <td>支持GPU加速</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>系统架构</h2>
+        <p>智能协同操作系统采用现代化的云原生架构，确保高可用性、可扩展性和安全性。</p>
+        
+        <h2>部署方案</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>方案类型</th>
+                    <th>适用场景</th>
+                    <th>用户规模</th>
+                    <th>价格范围</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>云端部署</td>
+                    <td>中小型企业</td>
+                    <td>10-500人</td>
+                    <td>¥99-999/月</td>
+                </tr>
+                <tr>
+                    <td>混合云部署</td>
+                    <td>大型企业</td>
+                    <td>500-5000人</td>
+                    <td>¥999-9999/月</td>
+                </tr>
+                <tr>
+                    <td>私有化部署</td>
+                    <td>政府机构</td>
+                    <td>1000+人</td>
+                    <td>定制报价</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>© 2023 智能协同操作系统. 保留所有权利.</p>
+        <p>联系我们: info@intelligent-os.com | 400-800-8888</p>
+    </footer>
+
+    <script>
+        // 粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 6 + 2;
+                const delay = Math.random() * 15;
+                const leftPosition = Math.random() * 100;
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = leftPosition + '%';
+                particle.style.animationDelay = delay + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 导航栏滚动效果
+        function handleNavScroll() {
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // 平滑滚动
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // 数字动画
+        function animateNumbers() {
+            const stats = document.querySelectorAll('.stat-item h3');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const text = target.textContent;
+                        const number = parseInt(text.replace(/\D/g, ''));
+                        const suffix = text.replace(/[\d.]/g, '');
+                        
+                        let current = 0;
+                        const increment = number / 50;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= number) {
+                                current = number;
+                                clearInterval(timer);
+                            }
+                            target.textContent = Math.floor(current) + suffix;
+                        }, 30);
+                    }
+                });
+            });
+
+            stats.forEach(stat => observer.observe(stat));
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            handleNavScroll();
+            initSmoothScroll();
+            animateNumbers();
+        });
+    </script>
+</body>
+</html>
